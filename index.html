@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Text Generator | مولد النصوص المخصصة</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+            color: #FFFFFF;
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1c1c1c;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 18px;
+            width: 80%;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 20px;
+            color: #FFFFFF;
+            background-color: #333333;
+        }
+        select, button {
+            padding: 10px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover, select:hover {
+            background-color: #45a049;
+        }
+        .custom-text {
+            font-size: 24px;
+            margin-top: 20px;
+            background-color: #333333;
+            padding: 20px;
+            border-radius: 5px;
+            word-break: break-all;
+        }
+        .copy-btn {
+            background-color: #ff4747;
+            margin-top: 10px;
+        }
+        .copy-btn:hover {
+            background-color: #ff2c2c;
+        }
+        .label {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Custom Text Generator | مولد النصوص المخصصة</h1>
+        <p>Enter your text, choose options, and generate invisible decorations.</p>
+        <p>أدخل النص، اختر الخيارات، ثم أنشئ الزخارف المخفية.</p>
+        <input type="text" id="inputText" placeholder="Enter your text here | أدخل النص هنا">
+        <br>
+        <div class="label">
+            <label for="placement">Decoration Placement: </label>
+            <label for="placement">مكان الزخرفة:</label>
+        </div>
+        <select id="placement">
+            <option value="beginning">Beginning | البداية</option>
+            <option value="end">End | النهاية</option>
+            <option value="middle">Middle | الوسط</option>
+            <option value="random">Random | عشوائي</option>
+        </select>
+        <br>
+        <div class="label">
+            <label for="repetition">Decoration Repetition: </label>
+            <label for="repetition">تكرار الزخرفة:</label>
+        </div>
+        <select id="repetition">
+            <option value="once">Once | مرة واحدة</option>
+            <option value="twice">Twice | مرتين</option>
+            <option value="thrice">Thrice | ثلاث مرات</option>
+            <option value="multiple">Multiple | عدة مرات</option>
+            <option value="random">Random | عشوائي</option>
+        </select>
+        <br>
+        <button onclick="generateInvisibleText()">Generate | أنشئ</button>
+        <div class="custom-text" id="customText"></div>
+        <button class="copy-btn" onclick="copyText()">Copy Text | نسخ النص</button>
+    </div>
+
+    <script>
+        function generateInvisibleText() {
+            const inputText = document.getElementById('inputText').value;
+            const placement = document.getElementById('placement').value;
+            const repetition = document.getElementById('repetition').value;
+
+            const invisibleMarks = [
+                '\u034F', // Combining Grapheme Joiner
+                '\u200B', // Zero Width Space
+                '\u200C', // Zero Width Non-Joiner
+                '\u200D', // Zero Width Joiner
+                '\u2060', // Word Joiner
+                '\u2061', // Function Application
+                '\u2062', // Invisible Times
+                '\u2063', // Invisible Separator
+            ];
+
+            let customText = inputText;
+
+            // Determine the repetition count
+            let repeatCount = 1;
+            if (repetition === 'twice') {
+                repeatCount = 2;
+            } else if (repetition === 'thrice') {
+                repeatCount = 3;
+            } else if (repetition === 'multiple') {
+                repeatCount = 5;
+            } else if (repetition === 'random') {
+                repeatCount = Math.floor(Math.random() * 12) + 4; // Random between 4 and 15
+            }
+
+            // Repeat the invisible marks based on repetition selection
+            const repeatedMarks = invisibleMarks.join('').repeat(repeatCount);
+
+            // Apply the decoration based on the selected placement
+            if (placement === 'beginning') {
+                customText = repeatedMarks + inputText;
+            } else if (placement === 'end') {
+                customText = inputText + repeatedMarks;
+            } else if (placement === 'middle') {
+                const midIndex = Math.floor(inputText.length / 2);
+                customText = inputText.slice(0, midIndex) + repeatedMarks + inputText.slice(midIndex);
+            } else if (placement === 'random') {
+                const randomIndex = Math.floor(Math.random() * inputText.length);
+                customText = inputText.slice(0, randomIndex) + repeatedMarks + inputText.slice(randomIndex);
+            }
+
+            document.getElementById('customText').textContent = customText;
+        }
+
+        function copyText() {
+            const customText = document.getElementById('customText').textContent;
+            navigator.clipboard.writeText(customText).then(() => {
+                alert("Text copied to clipboard! | تم نسخ النص!");
+            }).catch(err => {
+                alert("Failed to copy text: " + err);
+            });
+        }
+    </script>
+</body>
+</html>
